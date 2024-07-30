@@ -40,8 +40,8 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Expanded(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32),
             width: double.infinity,
@@ -49,32 +49,32 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Flexible(child: Container(), flex: 2),
+                Flexible(child: Container(), flex: 3),
                 // svg image
                 LogoText(),
                 const SizedBox(height: 44),
-                // circular widget to accept and show our selected file
-                Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 64,
-                      backgroundImage: NetworkImage(
-                          'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'),
-                    ),
-                    Positioned(
-                      bottom: -10,
-                      left: 80,
-                      child: IconButton(
-                        onPressed: selectImage,
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
+                // // circular widget to accept and show our selected file
+                // Stack(
+                //   children: [
+                //     const CircleAvatar(
+                //       radius: 64,
+                //       backgroundImage: NetworkImage(
+                //           'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'),
+                //     ),
+                //     Positioned(
+                //       bottom: -10,
+                //       left: 80,
+                //       child: IconButton(
+                //         onPressed: selectImage,
+                //         icon: const Icon(
+                //           Icons.add_a_photo,
+                //           color: Colors.white,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                //const SizedBox(height: 24),
                 // text field input for username
                 TextFieldInput(
                   hintText: 'Username',
@@ -158,7 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       onTap: navigateToLogin,
                       child: Container(
                         child: Text(
-                          "Sign in.",
+                          "Sign in",
                           style: GoogleFonts.quicksand(
                             fontSize: 16.0,
                             color: accentColor,
