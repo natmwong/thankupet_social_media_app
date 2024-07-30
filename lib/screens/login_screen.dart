@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:thankupet_social_media_app/screens/signup_screen.dart";
 import "package:thankupet_social_media_app/widgets/logo_text.dart";
 import "package:thankupet_social_media_app/widgets/text_field_input.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
@@ -24,13 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
   }
 
+  void navigateToSignup() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32),
-          width: double.infinity,
+          width: MediaQuery.of(context).size.width,
+          //height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -99,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   GestureDetector(
-                    //onTap: navigateToSignup,
+                    onTap: navigateToSignup,
                     child: Container(
                       child: Text(
                         "Sign up.",

@@ -40,8 +40,13 @@ class _TextFieldInputState extends State<TextFieldInput> {
       style:
           TextStyle(color: primaryColor), // Set the text color to primaryColor
       decoration: InputDecoration(
-        hintText: widget.hintText,
-        hintStyle: TextStyle(color: secondaryColor),
+        labelText: widget.hintText,
+        labelStyle: TextStyle(color: secondaryColor),
+        floatingLabelStyle: WidgetStateTextStyle.resolveWith(
+          (Set<WidgetState> states) {
+            return TextStyle(color: secondaryColor, letterSpacing: 1.3);
+          },
+        ),
         border: inputBorder,
         focusedBorder: inputBorder.copyWith(
           borderSide: BorderSide(
