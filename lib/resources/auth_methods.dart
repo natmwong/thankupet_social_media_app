@@ -1,8 +1,21 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import "package:thankupet_social_media_app/models/user.dart" as model;
 
 class AuthMethods {
   final SupabaseClient _supabase = Supabase.instance.client;
   Session? session;
+
+  Future<model.User> getUserDetails() async {
+    User currentUser = _supabase.auth.currentUser!;
+
+    final data = await _supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+
+    return model.User.fromJson(data);
+  }
 
   Future<String> signUpUser({
     required String username,
