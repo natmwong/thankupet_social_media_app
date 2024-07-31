@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:thankupet_social_media_app/resources/auth_methods.dart';
 import 'package:thankupet_social_media_app/resources/storage_methods.dart';
-import 'package:thankupet_social_media_app/screens/login_screen.dart';
+import 'package:thankupet_social_media_app/screens/nav_bar.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/utils/utils.dart';
-import 'package:thankupet_social_media_app/widgets/logo_text.dart';
 import 'package:thankupet_social_media_app/widgets/text_field_input.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -22,12 +19,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   String _selectedPronouns = 'he/him'; // Default value
   final TextEditingController _bioController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  //final SupabaseClient _supabase = Supabase.instance.client;
   XFile? _image;
   bool _isLoading = false;
   final inputBorder = OutlineInputBorder(borderSide: BorderSide.none);
 
+  /// Allows the user to select an image from the gallery.
   void selectImage() async {
     XFile im = await pickImage(ImageSource.gallery);
     setState(() {
@@ -35,7 +31,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
   }
 
-  void register() async {
+  // On success, updates user's profile information and redirects user to NavBar page.
+  // On error, displays a SnackBar with error message.
+  void updateProfile() async {
     setState(() {
       _isLoading = true;
     });
@@ -50,11 +48,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       _isLoading = false;
     });
     if (res != 'success') {
-      showSnackBar(res, context);
+      showSnackBar('res', context);
     } else {
+      showSnackBar('Registration complete', context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
+          builder: (context) => const NavBar(),
         ),
       );
     }
@@ -178,7 +177,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   const SizedBox(height: 24),
                   //button login
                   InkWell(
-                    onTap: register,
+                    onTap: updateProfile,
                     child: Container(
                       child: _isLoading
                           ? const Center(

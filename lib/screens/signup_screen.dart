@@ -1,9 +1,8 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
 import "package:thankupet_social_media_app/resources/auth_methods.dart";
 import "package:thankupet_social_media_app/screens/login_screen.dart";
-import "package:thankupet_social_media_app/screens/updateProfile_screen.dart";
+import "package:thankupet_social_media_app/screens/update_profile_screen.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
 import "package:thankupet_social_media_app/utils/utils.dart";
 import "package:thankupet_social_media_app/widgets/logo_text.dart";
@@ -22,7 +21,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final SupabaseClient _supabase = Supabase.instance.client;
   bool _isLoading = false;
 
   @override
@@ -42,26 +40,8 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Future<void> redirect(String res) async {
-    setState(() {
-      _isLoading = false;
-    });
-    await Future.delayed(Duration.zero);
-    final session = _supabase.auth.currentSession;
-
-    if (!mounted) return;
-
-    if (session != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const UpdateProfileScreen(),
-        ),
-      );
-    } else {
-      showSnackBar(res, context);
-    }
-  }
-
+  // On success, sign up user and redirect to the UpdateProfileScreen.
+  // On error, displays a SnackBar with error message.
   void signUpUser() async {
     setState(() {
       _isLoading = true;
@@ -72,7 +52,19 @@ class _SignupScreenState extends State<SignupScreen> {
       password: _passwordController.text,
       confirmPassword: _confirmPasswordController.text,
     );
-    redirect(res);
+    if (res == "success") {
+      showSnackBar('Signup success!', context);
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -91,28 +83,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 // svg image
                 LogoText(),
                 const SizedBox(height: 44),
-                // // circular widget to accept and show our selected file
-                // Stack(
-                //   children: [
-                //     const CircleAvatar(
-                //       radius: 64,
-                //       backgroundImage: NetworkImage(
-                //           'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg'),
-                //     ),
-                //     Positioned(
-                //       bottom: -10,
-                //       left: 80,
-                //       child: IconButton(
-                //         onPressed: selectImage,
-                //         icon: const Icon(
-                //           Icons.add_a_photo,
-                //           color: Colors.white,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                //const SizedBox(height: 24),
                 // text field input for username
                 TextFieldInput(
                   hintText: 'Username',
@@ -138,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   icon: Icons.lock_rounded,
                 ),
                 const SizedBox(height: 24),
-                // text field input for bio
+                // text field input for confirming password
                 TextFieldInput(
                   hintText: 'Confirm Password',
                   textInputType: TextInputType.text,
@@ -147,7 +117,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   icon: Icons.lock_rounded,
                 ),
                 const SizedBox(height: 24),
-                //button login
+                //button signup
                 InkWell(
                   onTap: signUpUser,
                   child: Container(
@@ -174,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                //button login
+                //button signout
                 InkWell(
                   onTap: () {
                     AuthMethods().signOut();

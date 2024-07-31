@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class StorageMethods {
   final SupabaseClient _supabase = Supabase.instance.client;
 
-  /// Updates a user's avatar and profile information.
+  /// Updates a user's avatar and profile information(fullName, pronouns, and bio).
   ///
   /// Returns a [String] indicating the result of the update process.
   /// Possible values are:
@@ -36,13 +34,12 @@ class StorageMethods {
             _supabase.storage.from('avatars').getPublicUrl(filePath);
         await _supabase.from('profiles').upsert([
           {
-            'id': userId,
             'full_name': name,
             'avatar_url': avatarUrl,
             'pronouns': pronouns,
             'bio': bio,
           }
-        ]);
+        ]).eq('id', userId);
         res = "success";
       } else {
         res = "Please enter name, pronouns, and bio";

@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
 import "package:thankupet_social_media_app/resources/auth_methods.dart";
+import "package:thankupet_social_media_app/screens/nav_bar.dart";
 import "package:thankupet_social_media_app/screens/signup_screen.dart";
 import "package:thankupet_social_media_app/utils/utils.dart";
 import "package:thankupet_social_media_app/widgets/logo_text.dart";
@@ -20,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
-  final SupabaseClient _supabase = Supabase.instance.client;
 
   @override
   void dispose() {
@@ -37,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // On success, user is logged in and redirected to home page.
+  // On error, displays a SnackBar with error message.
   void loginUser() async {
     setState(() {
       _isLoading = true;
@@ -45,8 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text, password: _passwordController.text);
 
     if (res == "success") {
-      showSnackBar(res, context);
-      Navigator.of(context).pushReplacementNamed('/home');
+      showSnackBar('Login success!', context);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const NavBar()));
       setState(() {
         _isLoading = false;
       });
@@ -56,20 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = false;
     });
-  }
-
-  Future<void> redirect() async {
-    await Future.delayed(Duration.zero);
-    final session = _supabase.auth.currentSession;
-
-    if (!mounted) return;
-
-    if (session != null) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
-    }
   }
 
   @override

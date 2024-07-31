@@ -1,5 +1,4 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thankupet_social_media_app/utils/utils.dart';
 
 class AuthMethods {
   final SupabaseClient _supabase = Supabase.instance.client;
@@ -28,7 +27,6 @@ class AuthMethods {
             },
           );
           session = success.session;
-          final User? user = success.user;
           res = "success";
         }
       } else {

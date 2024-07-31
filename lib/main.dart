@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:thankupet_social_media_app/screens/login_screen.dart';
-import 'package:thankupet_social_media_app/screens/updateProfile_screen.dart';
+import 'package:thankupet_social_media_app/screens/nav_bar.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 
 void main() async {
@@ -17,15 +16,18 @@ void main() async {
 class PawPost extends StatelessWidget {
   const PawPost({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final SupabaseClient supabase = Supabase.instance.client;
+    final Session? session = supabase.auth.currentSession;
     return MaterialApp(
       title: 'PawPost',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: backgroundColor, fontFamily: 'Quicksand'),
-      home: LoginScreen(),
+        scaffoldBackgroundColor: backgroundColor,
+        fontFamily: 'Quicksand',
+      ),
+      home: session != null ? const NavBar() : const LoginScreen(),
     );
   }
 }
