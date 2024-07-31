@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:supabase_flutter/supabase_flutter.dart";
+import "package:thankupet_social_media_app/resources/auth_methods.dart";
 import "package:thankupet_social_media_app/screens/signup_screen.dart";
+import "package:thankupet_social_media_app/utils/utils.dart";
 import "package:thankupet_social_media_app/widgets/logo_text.dart";
 import "package:thankupet_social_media_app/widgets/text_field_input.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
@@ -17,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  final SupabaseClient _supabase = Supabase.instance.client;
 
   @override
   void dispose() {
@@ -31,6 +35,41 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context) => const SignupScreen(),
       ),
     );
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+
+    if (res == "success") {
+      showSnackBar(res, context);
+      Navigator.of(context).pushReplacementNamed('/home');
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> redirect() async {
+    await Future.delayed(Duration.zero);
+    final session = _supabase.auth.currentSession;
+
+    if (!mounted) return;
+
+    if (session != null) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    } else {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
   }
 
   @override
@@ -68,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24),
                 //button login
                 InkWell(
-                  //onTap: loginUser,
+                  onTap: loginUser,
                   child: Container(
                     child: _isLoading
                         ? const Center(

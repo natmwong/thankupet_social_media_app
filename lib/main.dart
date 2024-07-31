@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:thankupet_social_media_app/screens/login_screen.dart';
+import 'package:thankupet_social_media_app/screens/updateProfile_screen.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 
 void main() async {
