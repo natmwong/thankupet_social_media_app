@@ -10,7 +10,7 @@ class User {
   final List followers;
   final List following;
 
-  /// Constructs a new [User] instance.
+  /// Constructs a new user instance.
   const User({
     required this.uid,
     required this.updatedAt,
@@ -23,7 +23,7 @@ class User {
     required this.following,
   });
 
-  /// Converts the [User] object to a JSON representation.
+  /// Converts the user object to a JSON representation.
   Map<String, dynamic> toJson() => {
         "uid": uid,
         "updatedAt": updatedAt,
@@ -36,7 +36,7 @@ class User {
         "following": following,
       };
 
-  //Constructs a [User] from json fromat
+  //Constructs a user from json fromat
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       uid: json['id'],

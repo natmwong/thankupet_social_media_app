@@ -7,6 +7,7 @@ class AuthMethods {
 
   Future<model.User> getUserDetails() async {
     User currentUser = _supabase.auth.currentUser!;
+    print(currentUser.id);
 
     final data = await _supabase
         .from('profiles')

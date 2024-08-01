@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import "package:provider/provider.dart";
+import "package:thankupet_social_media_app/providers/user_provider.dart";
 import "package:thankupet_social_media_app/resources/auth_methods.dart";
 import "package:thankupet_social_media_app/screens/nav_bar.dart";
 import "package:thankupet_social_media_app/screens/signup_screen.dart";
@@ -19,6 +21,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+
+  addData() async {
+    // listen is false to use UserProvider class once
+    UserProvider _userProvider = Provider.of(context, listen: false);
+    await _userProvider.refreshUser();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    addData();
+  }
 
   @override
   void dispose() {
