@@ -13,7 +13,7 @@ class FeedScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: backgroundColor,
         centerTitle: false,
-        title: LogoText(),
+        title: const LogoText(),
         actions: [
           IconButton(
             onPressed: () {},
@@ -25,8 +25,11 @@ class FeedScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream:
-            Supabase.instance.client.from('posts').stream(primaryKey: ['id']),
+        stream: Supabase.instance.client.from('posts').stream(primaryKey: [
+          'id'
+        ]).order('date_published',
+            ascending:
+                false), // query all posts in descending order based on date_published
         builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -42,6 +45,7 @@ class FeedScreen extends StatelessWidget {
 
           final posts = snapshot.data!;
 
+          // Builds a ListView of all posts in PostCard format
           return ListView.builder(
             itemCount: posts.length,
             itemBuilder: (context, index) => PostCard(

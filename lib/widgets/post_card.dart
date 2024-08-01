@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:thankupet_social_media_app/models/user.dart';
 import 'package:thankupet_social_media_app/providers/user_provider.dart';
+import 'package:thankupet_social_media_app/resources/storage_methods.dart';
 import 'package:thankupet_social_media_app/screens/nav_bar.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/widgets/like_animation.dart';
@@ -38,7 +39,7 @@ class _PostCardState extends State<PostCard> {
     final String description = widget.snap['description'];
     final List<dynamic> likes = widget.snap['likes'];
     final DateTime datePublished =
-        widget.snap['datePublished']?.toDate() ?? DateTime.now();
+        DateTime.parse(widget.snap['date_published']);
 
     return Container(
       color: backgroundColor,
@@ -114,11 +115,12 @@ class _PostCardState extends State<PostCard> {
           // IMAGE SECTION
           GestureDetector(
             onDoubleTap: () async {
-              // await FirestoreMethods().likePost(
-              //   widget.snap['postId'],
-              //   user.uid,
-              //   likes,
-              // );
+              await StorageMethods().likePost(
+                widget.snap['id'],
+                user.uid,
+                likes,
+              );
+              print('is working');
               setState(() {
                 isLikeAnimating = true;
               });
@@ -162,18 +164,16 @@ class _PostCardState extends State<PostCard> {
                 isAnimating: likes.contains(user.uid),
                 smallLike: true,
                 child: IconButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NavBar(), //replace w comments
-                    ),
-                  ),
-                  // onPressed: () async {
-                  //   await FirestoreMethods().likePost(
-                  //     widget.snap['postId'],
-                  //     user.uid,
-                  //     likes,
-                  //   );
-                  // },
+                  onPressed: () async {
+                    await StorageMethods().likePost(
+                      widget.snap['postId'],
+                      user.uid,
+                      likes,
+                    );
+                    setState(() {
+                      isLikeAnimating = true;
+                    });
+                  },
                   icon: likes.contains(user.uid)
                       ? const Icon(
                           Icons.favorite,

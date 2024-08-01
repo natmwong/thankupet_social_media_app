@@ -1,6 +1,5 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:thankupet_social_media_app/models/post.dart';
 import 'package:uuid/uuid.dart';
 
 /// A class that provides methods for storing user data and avatars.
@@ -110,18 +109,18 @@ class StorageMethods {
           'profimg_url': profImage
         });
 
-        final data =
-            _supabase.from('posts').select('*').eq('id', postId).single();
-        Post post = Post(
-          description: description,
-          uid: uid,
-          username: username,
-          postId: postId,
-          datePublished: DateTime.now().toString(),
-          imageUrl: postImageUrl,
-          profImage: profImage,
-          likes: [],
-        );
+        // final data =
+        //     _supabase.from('posts').select('*').eq('id', postId).single();
+        // Post post = Post(
+        //   description: description,
+        //   uid: uid,
+        //   username: username,
+        //   postId: postId,
+        //   datePublished: DateTime.now().toString(),
+        //   imageUrl: postImageUrl,
+        //   profImage: profImage,
+        //   likes: [],
+        // );
 
         res = "success";
       } else {
@@ -132,5 +131,28 @@ class StorageMethods {
       print(res);
     }
     return res;
+  }
+
+  /// Likes or unlikes a post based on whether the user's id is already in the likes or not
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        // Removing the user id from the likes array
+        likes.remove(uid);
+        final List currentLikes = likes;
+        await _supabase.from('posts').update({
+          'likes': [currentLikes]
+        }).eq('id', postId);
+      } else {
+        // Adding the user id to the likes array
+        likes.add(uid);
+        final List currentLikes = likes;
+        await _supabase.from('posts').update({
+          'likes': [currentLikes]
+        }).eq('id', postId);
+      }
+    } catch (e) {
+      print('Error liking/unliking post: $e');
+    }
   }
 }

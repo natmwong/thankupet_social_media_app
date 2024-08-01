@@ -26,16 +26,16 @@ class Post {
   /// Converts the post object to a JSON representation.
   Map<String, dynamic> toJson() => {
         "description": description,
-        "uid": uid,
+        "user_id": uid,
         "username": username,
-        "postId": postId,
-        "datePublished": datePublished,
-        "imageUrl": imageUrl,
-        "profImage": profImage,
+        "id": postId,
+        "date_published": datePublished,
+        "image_url": imageUrl,
+        "profimg_url": profImage,
         "likes": likes,
       };
 
-  // Constructs a post from json fromat
+  // Constructs a post from json format
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       description: json['description'],
