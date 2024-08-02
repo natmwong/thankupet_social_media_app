@@ -11,6 +11,7 @@ import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/utils/utils.dart';
 import 'package:thankupet_social_media_app/widgets/like_animation.dart';
 
+// PostCard widget which dispays a post's user profile picture, username, image, description, like count, and comment count
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
   const PostCard({super.key, required this.snap});

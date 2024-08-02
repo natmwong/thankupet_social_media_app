@@ -8,6 +8,7 @@ import "package:thankupet_social_media_app/utils/utils.dart";
 import "package:thankupet_social_media_app/widgets/logo_text.dart";
 import "package:thankupet_social_media_app/widgets/text_field_input.dart";
 
+// Sign up screen allowing user to sign up with a username, email, and password
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -146,35 +147,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                //button signout
-                InkWell(
-                  onTap: () {
-                    AuthMethods().signOut();
-                    showSnackBar("Signout success", context);
-                  },
-                  child: Container(
-                    child: _isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                              color: primaryColor,
-                            ),
-                          )
-                        : Text('Sign out',
-                            style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.w500)),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    decoration: const ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30),
-                          ),
-                        ),
-                        color: accentColor),
-                  ),
-                ),
                 const SizedBox(height: 12),
                 Flexible(child: Container(), flex: 2),
 

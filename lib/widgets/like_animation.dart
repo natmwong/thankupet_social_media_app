@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+// Widget for liking a post
 class LikeAnimation extends StatefulWidget {
   final Widget child; // The child widget that will be animated
   final bool

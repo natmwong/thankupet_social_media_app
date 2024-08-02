@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import "package:thankupet_social_media_app/models/user.dart" as model;
 
+// Class containing all user authentication methods in supabase
 class AuthMethods {
   final SupabaseClient _supabase = Supabase.instance.client;
   Session? session;

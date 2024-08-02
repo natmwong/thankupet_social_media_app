@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+// Button for Following, Unfollowing, Editing Profile, and Signing out
 class FollowButton extends StatelessWidget {
   final Function()? function;
   final Color backgroundColor;

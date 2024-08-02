@@ -8,6 +8,7 @@ import "package:thankupet_social_media_app/utils/theme_colors.dart";
 import "package:thankupet_social_media_app/utils/utils.dart";
 import "package:thankupet_social_media_app/widgets/comment_card.dart";
 
+// Comments screen of the selected post, allowing user to post a comment and like comments
 class CommentsScreen extends StatefulWidget {
   final snap;
   const CommentsScreen({super.key, required this.snap});

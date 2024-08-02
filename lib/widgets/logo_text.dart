@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 
+// PawPost logo text widget
 class LogoText extends StatelessWidget {
   const LogoText({super.key});
 

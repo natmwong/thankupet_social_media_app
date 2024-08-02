@@ -3,9 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 
 /// A custom text field input widget.
-///
-/// This widget provides a customizable text input field with various features
-/// such as hint text, input type, and an optional icon.
 class TextFieldInput extends StatefulWidget {
   final TextEditingController textEditingController;
   final bool isPass;

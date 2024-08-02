@@ -6,6 +6,7 @@ import "package:thankupet_social_media_app/providers/user_provider.dart";
 import "package:thankupet_social_media_app/resources/storage_methods.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
 
+// CommentCard widget displaying a comment's username, profile picture, text, and like count
 class CommentCard extends StatefulWidget {
   final snap;
   CommentCard({super.key, required this.snap});

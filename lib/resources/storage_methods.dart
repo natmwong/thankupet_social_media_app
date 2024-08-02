@@ -2,7 +2,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
-/// A class that provides methods for storing user data and avatars.
+/// A class that provides methods for storing data for profiles, posts, and comments
 class StorageMethods {
   final SupabaseClient _supabase = Supabase.instance.client;
 

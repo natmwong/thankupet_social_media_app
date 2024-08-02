@@ -8,6 +8,7 @@ import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/utils/utils.dart';
 import 'package:thankupet_social_media_app/widgets/follow_button.dart';
 
+// Profile screen for current user and all other users
 class ProfileScreen extends StatefulWidget {
   final String uid;
   const ProfileScreen({Key? key, required this.uid}) : super(key: key);

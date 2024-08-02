@@ -4,6 +4,8 @@ import "package:supabase_flutter/supabase_flutter.dart";
 import "package:thankupet_social_media_app/screens/profile_screen.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
 
+// Search screen which allows users to view all post images in a grid view
+// and search user profiles
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 

@@ -10,6 +10,7 @@ import "package:thankupet_social_media_app/widgets/logo_text.dart";
 import "package:thankupet_social_media_app/widgets/text_field_input.dart";
 import "package:thankupet_social_media_app/utils/theme_colors.dart";
 
+// Initial screen allowing user to sign in to the app
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 

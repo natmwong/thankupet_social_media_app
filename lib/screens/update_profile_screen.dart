@@ -8,6 +8,8 @@ import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/utils/utils.dart';
 import 'package:thankupet_social_media_app/widgets/text_field_input.dart';
 
+// Update Profile screen allowing users to register their initial profile details
+// or update their current details after registration
 class UpdateProfileScreen extends StatefulWidget {
   final bool isRegistration; // True for registration, false for editing
 

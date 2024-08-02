@@ -10,6 +10,8 @@ import 'package:thankupet_social_media_app/resources/storage_methods.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 import 'package:thankupet_social_media_app/utils/utils.dart';
 
+// Add Post screen allows user to post an image from their camera roll or files
+// along with a description
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
 
@@ -23,11 +25,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   bool _isLoading = false;
 
   /// Posts the image to the server.
-  ///
-  /// Parameters:
-  /// - [uid]: The user ID.
-  /// - [username]: The username.
-  /// - [profImage]: The profile image.
   void postImage(
     String uid,
     String username,
@@ -57,9 +54,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   }
 
   /// Shows a dialog to select an image from the camera or gallery.
-  ///
-  /// Parameters:
-  /// - [context]: The build context.
   Future<void> _selectImage(BuildContext context) async {
     return showDialog(
         context: context,

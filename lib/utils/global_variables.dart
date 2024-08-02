@@ -5,6 +5,7 @@ import 'package:thankupet_social_media_app/screens/feed_screen.dart';
 import 'package:thankupet_social_media_app/screens/profile_screen.dart';
 import 'package:thankupet_social_media_app/screens/search_screen.dart';
 
+// nav bar items
 List<Widget> homeScreenItems = [
   const FeedScreen(),
   const SearchScreen(),
