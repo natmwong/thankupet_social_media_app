@@ -74,7 +74,7 @@ class StorageMethods {
     XFile? file,
     String uid,
     String username,
-    String profImage,
+    String profilePic,
   ) async {
     String res = "some error occurred";
     try {
@@ -82,7 +82,7 @@ class StorageMethods {
           file != null &&
           uid.isNotEmpty &&
           username.isNotEmpty &&
-          profImage.isNotEmpty) {
+          profilePic.isNotEmpty) {
         final bytes = await file.readAsBytes();
         final userId = _supabase.auth.currentUser!.id;
         final fileExt = file.path.split('.').last;
@@ -106,7 +106,7 @@ class StorageMethods {
           'username': username,
           'description': description,
           'image_url': postImageUrl,
-          'profimg_url': profImage
+          'profimg_url': profilePic
         });
 
         // final data =
@@ -140,16 +140,85 @@ class StorageMethods {
         // Removing the user id from the likes array
         likes.remove(uid);
         final List currentLikes = likes;
-        await _supabase.from('posts').update({
-          'likes': [currentLikes]
-        }).eq('id', postId);
+        await _supabase
+            .from('posts')
+            .update({'likes': currentLikes}).eq('id', postId);
       } else {
         // Adding the user id to the likes array
         likes.add(uid);
         final List currentLikes = likes;
-        await _supabase.from('posts').update({
-          'likes': [currentLikes]
-        }).eq('id', postId);
+        await _supabase
+            .from('posts')
+            .update({'likes': currentLikes}).eq('id', postId);
+      }
+    } catch (e) {
+      print('Error liking/unliking post: $e');
+    }
+  }
+
+  /// Deletes a post.
+  ///
+  /// Parameters:
+  /// - [postId]: The ID of the post to delete.
+  Future<void> deletePost(String postId) async {
+    try {
+      await _supabase.from('posts').delete().eq('id', postId);
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+
+  /// Posts a comment on a post.
+  ///
+  /// Parameters:
+  /// - [postId]: The ID of the post.
+  /// - [text]: The text of the comment.
+  /// - [uid]: The user ID of the commenter.
+  /// - [name]: The name of the commenter.
+  /// - [profilePic]: The profile picture URL of the commenter.
+  Future<String> postComment(String postId, String text, String userId,
+      String name, String profilePic) async {
+    String res = "Some error occurred";
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        await _supabase.from('comments').insert({
+          'profimg_url': profilePic,
+          'username': name,
+          'post_id': postId,
+          'user_id': userId,
+          'content': text,
+          'id': commentId,
+          'likes': []
+        });
+        res = "success";
+      } else {
+        res = "Text is empty";
+      }
+    } catch (err) {
+      res = err.toString();
+      print(res);
+    }
+    return res;
+  }
+
+  /// Likes or unlikes a comment based on whether the user's id is already in the likes or not
+  Future<void> likeComment(String commentId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)) {
+        // Removing the user id from the likes array
+        likes.remove(uid);
+        final List currentLikes = likes;
+        await _supabase
+            .from('comments')
+            .update({'likes': currentLikes}).eq('id', commentId);
+      } else {
+        // Adding the user id to the likes array
+        likes.add(uid);
+        final List currentLikes = likes;
+        await _supabase
+            .from('comments')
+            .update({'likes': currentLikes}).eq('id', commentId);
       }
     } catch (e) {
       print('Error liking/unliking post: $e');

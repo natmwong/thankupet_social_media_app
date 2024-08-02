@@ -13,7 +13,10 @@ class FeedScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: backgroundColor,
         centerTitle: false,
-        title: const LogoText(),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: const LogoText(),
+        ),
         actions: [
           IconButton(
             onPressed: () {},

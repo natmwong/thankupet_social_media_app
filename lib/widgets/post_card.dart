@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:thankupet_social_media_app/models/user.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:thankupet_social_media_app/models/user.dart' as model;
 import 'package:thankupet_social_media_app/providers/user_provider.dart';
 import 'package:thankupet_social_media_app/resources/storage_methods.dart';
+import 'package:thankupet_social_media_app/screens/comments_screen.dart';
 import 'package:thankupet_social_media_app/screens/nav_bar.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
+import 'package:thankupet_social_media_app/utils/utils.dart';
 import 'package:thankupet_social_media_app/widgets/like_animation.dart';
 
 class PostCard extends StatefulWidget {
@@ -25,14 +28,27 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
-    //getComments();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('comments')
+          .select('*')
+          .eq('post_id', widget.snap['id']);
+      commentLen = response.length;
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
+    final model.User user = Provider.of<UserProvider>(context).getUser;
 
-    // Extract values from widget.snap and handle null cases
+    // Extract values from widget.snap
     final String profImage = widget.snap['profimg_url'];
     final String username = widget.snap['username'];
     final String imageUrl = widget.snap['image_url'];
@@ -79,6 +95,7 @@ class _PostCardState extends State<PostCard> {
                     showDialog(
                       context: context,
                       builder: (context) => Dialog(
+                        backgroundColor: secondaryBackgroundColor,
                         child: ListView(
                             padding: const EdgeInsets.symmetric(
                               vertical: 16,
@@ -89,14 +106,18 @@ class _PostCardState extends State<PostCard> {
                             ]
                                 .map(
                                   (e) => InkWell(
-                                    // onTap: () async {
-                                    //   FirestoreMethods().deletePost(widget.snap['postId']);
-                                    //   Navigator.of(context).pop();
-                                    // },
+                                    onTap: () async {
+                                      StorageMethods()
+                                          .deletePost(widget.snap['postId']);
+                                      Navigator.of(context).pop();
+                                    },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 12, horizontal: 16),
-                                      child: Text(e),
+                                      child: Text(
+                                        e,
+                                        style: TextStyle(color: primaryColor),
+                                      ),
                                     ),
                                   ),
                                 )
@@ -120,7 +141,6 @@ class _PostCardState extends State<PostCard> {
                 user.uid,
                 likes,
               );
-              print('is working');
               setState(() {
                 isLikeAnimating = true;
               });
@@ -166,7 +186,7 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   onPressed: () async {
                     await StorageMethods().likePost(
-                      widget.snap['postId'],
+                      widget.snap['id'],
                       user.uid,
                       likes,
                     );
@@ -188,8 +208,9 @@ class _PostCardState extends State<PostCard> {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
-                        NavBar(), //replace later with comment screen
+                    builder: (context) => CommentsScreen(
+                      snap: widget.snap,
+                    ),
                   ),
                 ),
                 icon: const Icon(
@@ -257,7 +278,8 @@ class _PostCardState extends State<PostCard> {
                 InkWell(
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => NavBar(), //replace w comments
+                      builder: (context) => CommentsScreen(
+                          snap: widget.snap), //replace w comments
                     ),
                   ),
                   child: Container(
