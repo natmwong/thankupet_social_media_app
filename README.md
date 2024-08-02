@@ -1,16 +1,37 @@
-# thankupet_social_media_app
+# ThankuPet Social Media App
 
-A new Flutter project.
+PawPost is a social media application built with Flutter. This app allows users to share their pet's moments, connect with other pet owners, and explore a community of pet lovers.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **User Authentication and Profile Management**: Secure user authentication and personalized profile management.
+- **Post Creation and Deletion**: Users can create and delete posts to share their pet's moments.
+- **Like and Comment on Posts**: Engage with other users by liking and commenting on their posts.
+- **Follow and Unfollow Users**: Build your network by following or unfollowing other pet owners.
+- **Explore and Search Functionality**: Discover new content and users through the explore and search features.
 
-A few resources to get you started if this is your first Flutter project:
+## How to Use
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+To use PawPost, simply create an account or log in with your existing credentials. Once logged in, you can start creating posts, following other users, and engaging with the community by liking and commenting on posts.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Video Walkthrough
+
+Here is a walkthrough of the app's features.
+
+## Future Improvements
+
+Future improvements may include adding direct messaging between users, enhancing the explore functionality with more filters, and allowing users to edit their own posts.
+
+## Notes
+
+One challenge was optimizing the search functionality to provide relevant results quickly. This involved fine-tuning the database queries and indexing strategies.
+
+## License
+
+    Copyright [2024] [Natasha Wong]
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0

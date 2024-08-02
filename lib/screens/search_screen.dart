@@ -43,6 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
             });
           },
         ),
+        automaticallyImplyLeading: false,
       ),
       body: isShowUsers
           ? FutureBuilder(

@@ -26,6 +26,7 @@ class FeedScreen extends StatelessWidget {
             ),
           ),
         ],
+        automaticallyImplyLeading: false,
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: Supabase.instance.client.from('posts').stream(primaryKey: [

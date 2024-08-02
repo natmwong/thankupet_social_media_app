@@ -109,7 +109,7 @@ class _PostCardState extends State<PostCard> {
                                   (e) => InkWell(
                                     onTap: () async {
                                       StorageMethods()
-                                          .deletePost(widget.snap['postId']);
+                                          .deletePost(widget.snap['id']);
                                       Navigator.of(context).pop();
                                     },
                                     child: Container(
