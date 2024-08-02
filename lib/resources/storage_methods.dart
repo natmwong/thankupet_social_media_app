@@ -109,19 +109,6 @@ class StorageMethods {
           'profimg_url': profilePic
         });
 
-        // final data =
-        //     _supabase.from('posts').select('*').eq('id', postId).single();
-        // Post post = Post(
-        //   description: description,
-        //   uid: uid,
-        //   username: username,
-        //   postId: postId,
-        //   datePublished: DateTime.now().toString(),
-        //   imageUrl: postImageUrl,
-        //   profImage: profImage,
-        //   likes: [],
-        // );
-
         res = "success";
       } else {
         res = "Please fill out all information";
@@ -156,10 +143,7 @@ class StorageMethods {
     }
   }
 
-  /// Deletes a post.
-  ///
-  /// Parameters:
-  /// - [postId]: The ID of the post to delete.
+  /// Deletes a post
   Future<void> deletePost(String postId) async {
     try {
       await _supabase.from('posts').delete().eq('id', postId);
@@ -168,14 +152,7 @@ class StorageMethods {
     }
   }
 
-  /// Posts a comment on a post.
-  ///
-  /// Parameters:
-  /// - [postId]: The ID of the post.
-  /// - [text]: The text of the comment.
-  /// - [uid]: The user ID of the commenter.
-  /// - [name]: The name of the commenter.
-  /// - [profilePic]: The profile picture URL of the commenter.
+  // Posts a comment on a post.
   Future<String> postComment(String postId, String text, String userId,
       String name, String profilePic) async {
     String res = "Some error occurred";
@@ -204,24 +181,74 @@ class StorageMethods {
 
   /// Likes or unlikes a comment based on whether the user's id is already in the likes or not
   Future<void> likeComment(String commentId, String uid, List likes) async {
+    List currentLikes;
     try {
       if (likes.contains(uid)) {
         // Removing the user id from the likes array
         likes.remove(uid);
-        final List currentLikes = likes;
+        currentLikes = likes;
         await _supabase
             .from('comments')
             .update({'likes': currentLikes}).eq('id', commentId);
       } else {
         // Adding the user id to the likes array
         likes.add(uid);
-        final List currentLikes = likes;
+        currentLikes = likes;
         await _supabase
             .from('comments')
             .update({'likes': currentLikes}).eq('id', commentId);
       }
     } catch (e) {
       print('Error liking/unliking post: $e');
+    }
+  }
+
+  /// Follows or unfollows a user based on whether the user's id is already in the follow list or not
+  Future<void> followUser(String uid, String followId) async {
+    try {
+      // Fetch the current user's profile
+      final userSnap = await _supabase
+          .from('profiles')
+          .select('following')
+          .eq('id', uid)
+          .single();
+      List<String> following = List<String>.from(userSnap['following'] ?? []);
+
+      // Fetch the follow target's profile
+      final followSnap = await _supabase
+          .from('profiles')
+          .select('followers')
+          .eq('id', followId)
+          .single();
+      List<String> followers = List<String>.from(followSnap['followers'] ?? []);
+
+      if (following.contains(followId)) {
+        // Unfollow: Remove followId from the current user's following list
+        following.remove(followId);
+        await _supabase
+            .from('profiles')
+            .update({'following': following}).eq('id', uid);
+
+        // Unfollow: Remove uid from the target user's followers list
+        followers.remove(uid);
+        await _supabase
+            .from('profiles')
+            .update({'followers': followers}).eq('id', followId);
+      } else {
+        // Follow: Add followId to the current user's following list
+        following.add(followId);
+        await _supabase
+            .from('profiles')
+            .update({'following': following}).eq('id', uid);
+
+        // Follow: Add uid to the target user's followers list
+        followers.add(uid);
+        await _supabase
+            .from('profiles')
+            .update({'followers': followers}).eq('id', followId);
+      }
+    } catch (e) {
+      print('Error following/unfollowing user: $e');
     }
   }
 }

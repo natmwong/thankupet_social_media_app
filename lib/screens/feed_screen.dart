@@ -35,7 +35,8 @@ class FeedScreen extends StatelessWidget {
                 false), // query all posts in descending order based on date_published
         builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(color: secondaryColor));
           }
 
           if (snapshot.hasError) {

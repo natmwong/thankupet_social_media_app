@@ -54,8 +54,10 @@ class _SignupScreenState extends State<SignupScreen> {
     );
     if (res == "success") {
       showSnackBar('Signup success!', context);
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const UpdateProfileScreen(
+                isRegistration: true,
+              )));
       setState(() {
         _isLoading = false;
       });

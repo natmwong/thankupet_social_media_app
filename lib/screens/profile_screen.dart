@@ -1,17 +1,12 @@
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter/material.dart";
-import "package:instagram_flutter/resources/auth_methods.dart";
-import "package:instagram_flutter/resources/firestore_methods.dart";
-import "package:instagram_flutter/screens/login_screen.dart";
-import "package:instagram_flutter/utils/colors.dart";
-import "package:instagram_flutter/utils/utils.dart";
-import "package:instagram_flutter/widgets/follow_button.dart";
-import "package:supabase_flutter/supabase_flutter.dart";
-import "package:thankupet_social_media_app/resources/auth_methods.dart";
-import "package:thankupet_social_media_app/screens/login_screen.dart";
-import "package:thankupet_social_media_app/utils/theme_colors.dart";
-import "package:thankupet_social_media_app/utils/utils.dart";
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:thankupet_social_media_app/resources/auth_methods.dart';
+import 'package:thankupet_social_media_app/resources/storage_methods.dart';
+import 'package:thankupet_social_media_app/screens/login_screen.dart';
+import 'package:thankupet_social_media_app/screens/update_profile_screen.dart';
+import 'package:thankupet_social_media_app/utils/theme_colors.dart';
+import 'package:thankupet_social_media_app/utils/utils.dart';
+import 'package:thankupet_social_media_app/widgets/follow_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -28,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int following = 0;
   bool isFollowing = false;
   bool isLoading = false;
+  String current_uid = Supabase.instance.client.auth.currentUser!.id;
 
   @override
   void initState() {
@@ -46,17 +42,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .eq('id', widget.uid)
           .single();
 
-      //get post length
+      // Get post length
       var postSnap = await Supabase.instance.client
           .from('posts')
           .select('*')
           .eq('user_id', widget.uid);
 
       postLen = postSnap.length;
+      userData = userSnap;
       followers = userSnap['followers'].length;
       following = userSnap['following'].length;
-      isFollowing = userSnap['followers']
-          .contains(Supabase.instance.client.auth.currentUser!.id);
+      isFollowing = userSnap['followers'].contains(current_uid);
       setState(() {});
     } catch (e) {
       showSnackBar(e.toString(), context);
@@ -70,13 +66,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return isLoading
         ? const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: secondaryColor,
+            ),
           )
         : Scaffold(
             appBar: AppBar(
               backgroundColor: backgroundColor,
-              title: Text(userData['username']),
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Text(
+                      userData['username'],
+                      style: TextStyle(color: primaryColor),
+                    ),
+                    Spacer(),
+                    Supabase.instance.client.auth.currentUser!.id == widget.uid
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.settings,
+                              color: primaryColor,
+                            ),
+                            onPressed: () {
+                              // Add settings functionality here
+                            },
+                          )
+                        : IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: primaryColor,
+                            ),
+                            onPressed: () {
+                              // Add functionality for three dot icon here
+                            },
+                          ),
+                  ],
+                ),
+              ),
               centerTitle: false,
+              automaticallyImplyLeading:
+                  Supabase.instance.client.auth.currentUser!.id != widget.uid,
+              leading:
+                  Supabase.instance.client.auth.currentUser!.id != widget.uid
+                      ? IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: primaryColor,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      : null,
             ),
             body: ListView(
               children: [
@@ -88,7 +130,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(userData['photoUrl']),
+                            backgroundImage:
+                                NetworkImage(userData['avatar_url']),
                             radius: 40,
                           ),
                           Expanded(
@@ -112,34 +155,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Supabase.instance.client.auth.currentUser!
                                                 .id ==
                                             widget.uid
-                                        ? FollowButton(
-                                            text: 'Sign out',
-                                            backgroundColor: backgroundColor,
-                                            textColor: primaryColor,
-                                            borderColor: Colors.grey,
-                                            function: () async {
-                                              await AuthMethods().signOut();
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const LoginScreen(),
-                                                ),
-                                              );
-                                            },
+                                        ? Column(
+                                            children: [
+                                              FollowButton(
+                                                text: 'Edit Profile',
+                                                backgroundColor: accentColor,
+                                                textColor: primaryColor,
+                                                borderColor: accentColor,
+                                                function: () async {
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UpdateProfileScreen(
+                                                        isRegistration: false,
+                                                      ),
+                                                    ),
+                                                  );
+                                                  // Refresh profile data after update
+                                                  getData();
+                                                },
+                                              ),
+                                              FollowButton(
+                                                text: 'Sign out',
+                                                backgroundColor:
+                                                    backgroundColor,
+                                                textColor: primaryColor,
+                                                borderColor: Colors.grey,
+                                                function: () async {
+                                                  await AuthMethods().signOut();
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const LoginScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
                                           )
                                         : isFollowing
                                             ? FollowButton(
                                                 text: 'Unfollow',
-                                                backgroundColor: Colors.white,
+                                                backgroundColor: primaryColor,
                                                 textColor: Colors.black,
-                                                borderColor: Colors.grey,
+                                                borderColor: secondaryColor,
                                                 function: () async {
-                                                  await FirestoreMethods()
+                                                  await StorageMethods()
                                                       .followUser(
-                                                          FirebaseAuth.instance
-                                                              .currentUser!.uid,
-                                                          userData['uid']);
+                                                          Supabase
+                                                              .instance
+                                                              .client
+                                                              .auth
+                                                              .currentUser!
+                                                              .id,
+                                                          userData['id']);
 
                                                   setState(() {
                                                     isFollowing = false;
@@ -149,15 +220,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               )
                                             : FollowButton(
                                                 text: 'Follow',
-                                                backgroundColor: Colors.blue,
-                                                textColor: Colors.white,
-                                                borderColor: Colors.blue,
+                                                backgroundColor: accentColor,
+                                                textColor: primaryColor,
+                                                borderColor: accentColor,
                                                 function: () async {
-                                                  await FirestoreMethods()
+                                                  await StorageMethods()
                                                       .followUser(
-                                                          FirebaseAuth.instance
-                                                              .currentUser!.uid,
-                                                          userData['uid']);
+                                                          Supabase
+                                                              .instance
+                                                              .client
+                                                              .auth
+                                                              .currentUser!
+                                                              .id,
+                                                          userData['id']);
 
                                                   setState(() {
                                                     isFollowing = true;
@@ -175,11 +250,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 15),
-                        child: Text(
-                          userData['username'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              userData['full_name'],
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              userData['pronouns'],
+                              style: TextStyle(
+                                color: secondaryColor,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Container(
@@ -187,6 +278,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.only(top: 1),
                         child: Text(
                           userData['bio'],
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
                       ),
                     ],
@@ -197,16 +292,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   future: Supabase.instance.client
                       .from('posts')
                       .select('*')
-                      .eq('uid', widget.uid),
+                      .eq('user_id', widget.uid),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: secondaryColor,
+                        ),
                       );
                     }
                     return GridView.builder(
                         shrinkWrap: true,
-                        itemCount: (snapshot.data! as dynamic).docs.length,
+                        itemCount: (snapshot.data! as dynamic).length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -219,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           return Container(
                             child: Image(
-                              image: NetworkImage(snap['postimg_url']),
+                              image: NetworkImage(snap['image_url']),
                               fit: BoxFit.cover,
                             ),
                           );
@@ -239,6 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Text(
             num.toString(),
             style: const TextStyle(
+              color: primaryColor,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -250,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
-                color: Colors.grey,
+                color: primaryColor,
               ),
             ),
           ),
