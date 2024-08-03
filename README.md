@@ -1,6 +1,6 @@
 # ThankuPet Social Media App
 
-PawPost is a social media application built with Flutter. This app allows users to share their pet's moments, connect with other pet owners, and explore a community of pet lovers.
+PawPost is a social media application built with Flutter and Supabase. This app allows users to share their pet's moments, connect with other pet owners, and explore a community of pet lovers.
 
 ## Features
 
