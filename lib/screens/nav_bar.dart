@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:thankupet_social_media_app/providers/user_provider.dart';
+import 'package:thankupet_social_media_app/resources/auth_methods.dart';
 import 'package:thankupet_social_media_app/utils/global_variables.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
 
@@ -21,6 +23,7 @@ class _NavBarState extends State<NavBar> {
     // listen is false to use UserProvider class once
     UserProvider _userProvider = Provider.of(context, listen: false);
     await _userProvider.refreshUser();
+    print("current user: " + Supabase.instance.client.auth.currentUser!.id);
   }
 
   @override

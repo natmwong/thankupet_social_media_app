@@ -29,7 +29,14 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
+    refreshUserData();
     getComments();
+  }
+
+  void refreshUserData() async {
+    // Refresh user data in provider
+    UserProvider userProvider = Provider.of(context, listen: false);
+    await userProvider.refreshUser();
   }
 
   void getComments() async {

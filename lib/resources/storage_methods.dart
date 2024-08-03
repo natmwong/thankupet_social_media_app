@@ -17,7 +17,8 @@ class StorageMethods {
       {required XFile? file,
       required String name,
       required String pronouns,
-      required String bio}) async {
+      required String bio,
+      required bool isRegistration}) async {
     String res = "Some error occurred";
     try {
       if (file != null &&
@@ -37,15 +38,27 @@ class StorageMethods {
         final avatarUrl =
             _supabase.storage.from('avatars').getPublicUrl(filePath);
 
-        // insert updated current user data into profiles datatable
-        await _supabase.from('profiles').upsert([
-          {
-            'full_name': name,
-            'avatar_url': avatarUrl,
-            'pronouns': pronouns,
-            'bio': bio,
-          }
-        ]).eq('id', userId);
+        if (isRegistration == false) {
+          await _supabase.from('profiles').upsert([
+            {
+              'full_name': name,
+              'avatar_url': avatarUrl,
+              'pronouns': pronouns,
+              'bio': bio,
+            }
+          ]).eq('id', userId);
+        } else {
+          await _supabase.from('profiles').upsert([
+            {
+              'full_name': name,
+              'avatar_url': avatarUrl,
+              'pronouns': pronouns,
+              'bio': bio,
+              'followers': [],
+              'following': []
+            }
+          ]).eq('id', userId);
+        }
         res = "success";
       } else {
         res = "Please enter name, pronouns, and bio";
@@ -122,6 +135,9 @@ class StorageMethods {
 
   /// Likes or unlikes a post based on whether the user's id is already in the likes or not
   Future<void> likePost(String postId, String uid, List likes) async {
+    print('postId: ' + postId);
+    print('user_id: ' + uid);
+    print('before likes: ' + likes.toString());
     try {
       if (likes.contains(uid)) {
         // Removing the user id from the likes array
@@ -130,13 +146,18 @@ class StorageMethods {
         await _supabase
             .from('posts')
             .update({'likes': currentLikes}).eq('id', postId);
+        print('successfully unliked');
       } else {
         // Adding the user id to the likes array
         likes.add(uid);
         final List currentLikes = likes;
+        print('after likes: ' + currentLikes.toString());
         await _supabase
             .from('posts')
-            .update({'likes': currentLikes}).eq('id', postId);
+            .update({'likes': currentLikes})
+            .eq('id', postId)
+            .catchError((error) => print('Error liking/unliking post: $error'));
+        print('successfully liked');
       }
     } catch (e) {
       print('Error liking/unliking post: $e');

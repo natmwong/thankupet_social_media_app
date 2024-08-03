@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     getData();
+    print("current user in profile screen: " + widget.uid);
   }
 
   getData() async {

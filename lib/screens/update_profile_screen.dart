@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:thankupet_social_media_app/providers/user_provider.dart';
 import 'package:thankupet_social_media_app/resources/storage_methods.dart';
 import 'package:thankupet_social_media_app/screens/nav_bar.dart';
 import 'package:thankupet_social_media_app/utils/theme_colors.dart';
@@ -47,7 +49,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       name: _fullNameController.text,
       pronouns: _selectedPronouns,
       bio: _bioController.text,
+      isRegistration: widget.isRegistration,
     );
+
+    // // Refresh user data in provider
+    UserProvider userProvider = Provider.of(context, listen: false);
+    await userProvider.refreshUser();
 
     setState(() {
       _isLoading = false;
