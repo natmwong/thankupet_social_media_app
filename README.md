@@ -16,7 +16,7 @@ To use PawPost, simply create an account or log in with your existing credential
 
 ## Video Walkthrough
 
-Here is a walkthrough of the app's features.
+[Here](https://drive.google.com/file/d/1ZuTKGvp-AqQuZzdH8ttnQLFZnl8FNHRZ/view?usp=sharing) is a walkthrough of the app's features.
 
 ## Future Improvements
 
